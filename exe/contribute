@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# This script should create the two files needed to contribute to this repo
+# run it, answer the prompts and then edit the files, thanks again for helping out
+#
+# you will need:
+# 1) the name of the gem you found a deprecation for (i.e. redis)
+# 2) the version of the gem the deprecation *first shows up in* (i.e. 5.2)
+# 3) a filename for the deprecation, in_snake_case (see the other finder file names for example)
+
+num="[[:digit:]]+"
+version_regex="${num}\.${num}\.${num}"
+
+finder_path="lib/deprecool/finders"
+test_path="test/finders"
+
+if [[ $(basename $PWD) == "deprecool" ]]; then
+    sample_finder="exe/sample_finder.rb"
+    sample_test="exe/sample_finder_test.rb"
+else
+    echo "please only run this inside the deprecool folder"
+    exit 1
+fi
+
+printf "\tEnter the gem name: "
+read gem_name
+
+if [[ $gem_name ]]; then
+    printf "\tnow enter the gem version with decimals, (e.g. 1.0.0): "
+    read version
+
+    if [[ $version =~ $version_regex ]]; then
+        printf "\tgreat, now enter a classname in snake_case for the class file: "
+        read classname
+
+        # hanami/v1.0.0
+        filepath="${gem_name}/v${version}/"
+
+        # lib/deprecool/finders/hanami/v1.0.0
+        finder_filepath="${finder_path}/${filepath}"
+
+        # test/finders/hanami/v1.0.0
+        test_filepath="${test_path}/${filepath}"
+
+        # lib/deprecool/finders/hanami/v1.0.0/something_deprecated.rb
+        finder_file="${finder_filepath}/${classname}.rb"
+
+        # test/finders/hanami/v1.0.0/something_deprecated_test.rb
+        test_file="${test_filepath}/${classname}_test.rb"
+
+        printf "about to make 2 files:\n > %s\n > %s\n" "$finder_file" "$test_file"
+        echo
+        read -n 1 -s -r -p "Press any key to continue, or ctrl+c to cancel"
+        echo
+
+        mkdir -p "$finder_filepath" && touch "$finder_file"
+        mkdir -p "$test_filepath"   && touch "$test_file"
+
+
+        cp -v "$sample_finder" "$finder_file"
+        cp -v "$sample_test" "$test_file"
+
+        echo
+        echo "Success! Thanks for the help"
+
+        exit 0
+    else
+        echo "the version didn't seem to match, it should be three numbers seperated by a dot: '1.1.0'"
+        exit 1
+    fi
+
+else
+    echo "something went wrong... please try again"
+    exit 1
+fi
