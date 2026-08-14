@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# requiring this here so we don't have to remember to add
-# it in individual finders
 require_relative 'helpers/prism_helpers'
 
 module Deprecool
@@ -106,7 +104,6 @@ module Deprecool
       # Prism::VisitClassNode  => on_class_node
       # Prism::VisitDefNode    => on_def_node
       # Prism::VisitModuleNode => on_module_node
-      # Prism::
       def hook_methods
         instance_methods(false).grep(/\Aon_\w+_node\z/)
       end
@@ -116,7 +113,7 @@ module Deprecool
 
     def initialize(file_path, source, offenses)
       @file_path = file_path
-      @source    = source # the result of Prism.parse
+      @source    = source # the AST from Prism.parse
       @offenses  = offenses
     end
 

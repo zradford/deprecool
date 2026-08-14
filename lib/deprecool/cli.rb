@@ -2,7 +2,6 @@
 
 require 'json'
 require 'dry/cli'
-require 'debug'
 
 module Deprecool
   # Command-line entry point. Scans the given files/directories and reports

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 module Deprecool
-  # Selects which finders should run for a given application, based on the gems
-  # (and Ruby) it actually uses and at what versions.
+  # Selects which finders should run for a given application
   module Registry
     extend self
 
-    # Every registered finder.
+    # All the subclasses of Finder
     def all_finders
       Finder.registry
     end
