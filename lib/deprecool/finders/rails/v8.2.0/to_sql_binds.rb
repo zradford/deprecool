@@ -7,7 +7,7 @@ module Deprecool
         class ToSqlBinds < Deprecool::Finder
           gem           :rails
           deprecated_in '8.2.0'
-          removed_in    '8.3.0'
+          removed_in    '9.0.0'
           title         'Passing "binds" into "to_sql" is deprecated'
           summary       'Since Rails 5.2, bind parameters live on the Arel AST ' \
                         'to_sql_and_binds no longer uses binds for SQL construction, ' \
@@ -26,9 +26,7 @@ module Deprecool
             # if a method called 'to_sql' is passed two arguments and the second is an
             # array that's probably good enough
             return unless node.name == :to_sql
-
-            arguments_array = unwrap_arguments(node.arguments)
-            return unless arguments_array && arguments_array[1]
+            return unless arguments_are_length(node.arguments, 2)
 
             add_offense(node, confidence: :high)
           end

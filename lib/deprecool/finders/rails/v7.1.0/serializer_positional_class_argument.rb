@@ -25,11 +25,10 @@ module Deprecool
 
           def on_call_node(node)
             return unless node.name == :serialize
+            return unless arguments_are_length(node.arguments, 2)
+            return unless unwrap_arguments(node.arguments)[1].is_a?(Prism::ConstantReadNode)
 
-            arguments_array = unwrap_arguments(node.arguments)
-            return unless arguments_array && arguments_array[1]
-
-            add_offense(node, confidence: :high) if arguments_array[1].is_a?(Prism::ConstantReadNode)
+            add_offense(node, confidence: :high)
           end
         end
       end

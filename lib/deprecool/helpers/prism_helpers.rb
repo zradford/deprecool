@@ -36,4 +36,28 @@ module PrismHelpers
 
     node.child_nodes
   end
+
+  def arguments_are_length(node, length)
+    return false unless node.is_a?(Prism::ArgumentsNode)
+
+    unwrap_arguments(node.arguments).length == length
+  end
+
+  def arguments_contain(node, value, position: -1, kwarg: nil)
+    return false unless node.is_a?(Prism::ArgumentsNode)
+
+    arguments = unwrap_arguments(node)
+
+    return (value_from_argument(arguments[position]) == value) if position >= 0
+
+    arguments.any? do |arg|
+      value_from_argument(arg) == value
+    end
+  end
+
+  def value_from_argument(node)
+    case node
+    when Prism::SymbolNode, Prism::StringNode then node.unescaped
+    end
+  end
 end
