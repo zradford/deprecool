@@ -116,7 +116,7 @@ module Deprecool
       def text_report(offenses, finders)
         if offenses.empty?
           puts colorize('No deprecations found.', :green)
-          puts "(#{finders.size} finder#{'s' unless finders.size == 1} active)"
+          puts "(#{finders.size} finder(s) active)"
           return
         end
 
