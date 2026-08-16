@@ -27,9 +27,9 @@ module Deprecool
             # I don't think we need much more than this
             # I'm open to be wrong though, maybe lots of people are subclassing
             # ObjectSpace or defining '_id2ref' on custom classes
-            confidence = node.receiver.name == :ObjectSpace ? :high : nil
+            confidence = node.receiver.name == :ObjectSpace ? :high : :none
 
-            return unless confidence
+            return if confidence == :none
 
             add_offense node, confidence: confidence
           end

@@ -21,7 +21,7 @@ module Deprecool
             return unless node.arguments
 
             confidence = confidence_from_receiver_node(node.receiver)
-            return unless confidence
+            return if confidence == :none
 
             add_offense(node, confidence:)
           end
@@ -35,12 +35,12 @@ module Deprecool
             # a plain `to_set(x)` call to the current scope's own
             # method. This is probably not Enumerable#to_set unless someone has
             # monkeypatched Enumerable and is using to_set with an argument, I guess
-            when nil then nil
+            when nil then :none
             when Prism::ConstantReadNode, Prism::ConstantPathNode
               # These nodes can constants like:
               # MY_DATA.to_set(arg) => likely an array, but can't be sure so :low
               # MyClass.to_set(arg) => has lowercase letters so it's a class method
-              receiver&.name&.match?(/[a-z]/) ? nil : :low
+              receiver&.name&.match?(/[a-z]/) ? :none : :low
             else
               # this branch is when the receiver is some
               # local var, instance variable, method chain, safe navigation, etc.
