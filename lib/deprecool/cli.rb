@@ -24,7 +24,7 @@ module Deprecool
         option :gems, type: :array, desc: 'Specify gem name(s) to list which versions have deprecation tracking available'
 
         def call(gems:)
-          CLI.list_finders(Finder.registry)
+          CLI.list_finders(Finder.subclasses)
 
           # TODO: REPL to filter through the available finders?
         end

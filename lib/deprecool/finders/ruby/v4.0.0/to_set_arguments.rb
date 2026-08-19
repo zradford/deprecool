@@ -11,8 +11,8 @@ module Deprecool
           title         'Passing arguments to #to_set is deprecated'
           summary       'Since Ruby 4.0, passing arguments to Set#to_set / Enumerable#to_set ' \
                         'is deprecated and will be removed.'
-          suggestion    'Call #to_set with no arguments. If you were building a ' \
-                        'Set subclass, construct it explicitly instead.'
+          suggestion    'Call #to_set with no arguments. If you want an instance of a subclass of Set' \
+                        'from an enumerable construct it explicitly instead: MySetSubclass.new(enumerable)'
           reference     'https://bugs.ruby-lang.org/issues/21390 https://github.com/ruby/ruby/pull/13489'
           effort        :low
 

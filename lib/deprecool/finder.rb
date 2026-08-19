@@ -31,17 +31,7 @@ module Deprecool
   class Finder
     include PrismHelpers
 
-    @registry = []
-
     class << self
-      # All finder subclasses, in definition order.
-      attr_reader :registry
-
-      def inherited(subclass)
-        Finder.registry << subclass
-        super
-      end
-
       # defines class methods that set instance variables
       %i[gem title summary suggestion reference].each do |attribute|
         define_method(attribute) do |value = (getter = true)|

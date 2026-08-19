@@ -7,7 +7,7 @@ module Deprecool
 
     # All the subclasses of Finder
     def all_finders
-      Finder.registry
+      @all ||= Finder.subclasses
     end
 
     # Gets finders that apply to the given versions.
