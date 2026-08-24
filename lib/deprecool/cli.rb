@@ -125,10 +125,13 @@ module Deprecool
         offenses.each_value do |offense_array|
           offense = offense_array.first
 
-          puts "\n#{colorize(offense.title, :bold)}\n"
+          puts "\n#{colorize(offense.title, :bold)}"
+          puts
           puts " * #{offense.summary}"
-          puts "  #{colorize('fix:', :green)} #{offense.suggestion}" if offense.suggestion
-          puts "  #{colorize('source:', :green)} #{offense.reference}" if offense.reference
+          puts
+          puts "  #{colorize('effort:', :green).ljust(16)} #{colorize_effort(offense.effort)}"
+          puts "  #{colorize('fix:', :green).ljust(16)} #{offense.suggestion}"   if offense.suggestion
+          puts "  #{colorize('source(s):', :green).ljust(16)} #{offense.reference}" if offense.reference
           puts '  Found At:'
           offense_array.each do |o|
             offense_count   += 1
@@ -157,6 +160,17 @@ module Deprecool
         colors = { red: 31, green: 32, yellow: 33, cyan: 36, bold: 1 }
 
         "\e[#{colors.fetch(color, nil)}m#{text}\e[0m"
+      end
+
+      def colorize_effort(effort)
+        # the effort method raises if you set anything but these
+        # values so it's safe to assume, it would also be a hassle
+        # to remove duplication here so oh well
+        effort_colors = { low:    :green,
+                          medium: :yellow,
+                          high: :red }
+
+        colorize(effort, effort_colors[effort])
       end
     end
   end
