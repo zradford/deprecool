@@ -1,7 +1,8 @@
 # Deprecool
 
-## Unreleased
+## [0.1.3] - 2026-08-24
  - Added Finder for: "Passing `binds` as a positional argument to `insert` deprecated", see [original commit](https://github.com/rails/rails/commit/2dca5457ab2097626481fdbec233ea56d3fb9ee3)
+ - Added `effort` to the CLI output
 
 ## [0.1.2] - 2026-08-14
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    deprecool (0.1.2)
+    deprecool (0.1.3)
       dry-cli (>= 1.0)
       prism (>= 1.0)
 
@@ -26,7 +26,7 @@ DEPENDENCIES
   rake
 
 CHECKSUMS
-  deprecool (0.1.2)
+  deprecool (0.1.3)
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dry-cli (1.4.1) sha256=b8015bb76c708aa8705a36faf694973e75eeeffca39b89c8e172dc6f66a7d874
   minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
