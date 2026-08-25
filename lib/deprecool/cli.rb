@@ -129,9 +129,9 @@ module Deprecool
           puts
           puts " * #{offense.summary}"
           puts
-          puts "  #{colorize('effort:', :green).ljust(16)} #{colorize_effort(offense.effort)}"
-          puts "  #{colorize('fix:', :green).ljust(16)} #{offense.suggestion}"   if offense.suggestion
-          puts "  #{colorize('source(s):', :green).ljust(16)} #{offense.reference}" if offense.reference
+          puts "  #{colorize('effort:', :green).ljust(19)} #{colorize_effort(offense.effort)}"
+          puts "  #{colorize('fix:', :green).ljust(19)} #{offense.suggestion}"   if offense.suggestion
+          puts "  #{colorize('source(s):', :green).ljust(19)} #{offense.reference}" if offense.reference
           puts '  Found At:'
           offense_array.each do |o|
             offense_count   += 1
