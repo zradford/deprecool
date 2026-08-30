@@ -26,10 +26,10 @@ class SerializerPositionalClassArgumentTest < Deprecool::FinderTest
   end
 
   def test_corrected_usage_of_coder_kwarg_does_not_get_flagged
-    assert_no_offense 'serialize :my_column, coder: MyEncoder'
+    assert_no_offenses 'serialize :my_column, coder: MyEncoder'
   end
 
   def test_bare_method_without_custom_encoder_arg
-    assert_no_offense 'serialize :my_column'
+    assert_no_offenses 'serialize :my_column'
   end
 end

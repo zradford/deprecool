@@ -7,5 +7,5 @@ class YourDeprecationNameTest < Deprecool::FinderTest
 
   # see test_helper, but these are available:
   # assert_offense 'code with offense', confidence: :level
-  # assert_no_offense 'code without offense'
+  # assert_no_offenses 'code without offense'
 end

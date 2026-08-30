@@ -26,18 +26,18 @@ class ToSetArgumentsTest < Deprecool::FinderTest
   end
 
   def test_no_arguments_with_block
-    assert_no_offense '[1, 2, 3].to_set { it * 2 }'
+    assert_no_offenses '[1, 2, 3].to_set { it * 2 }'
   end
 
   def test_camelcase_constant_receiver_class_method_with_argument
-    assert_no_offense 'MyClass.to_set(true)'
+    assert_no_offenses 'MyClass.to_set(true)'
   end
 
   def test_empty_parentheses_to_set_call_no_arguments
-    assert_no_offense 'my_variable.to_set()'
+    assert_no_offenses 'my_variable.to_set()'
   end
 
   def test_similar_method_name_with_arguments_is_ignored
-    assert_no_offense 'thing.to_setup(1, 2, 3)'
+    assert_no_offenses 'thing.to_setup(1, 2, 3)'
   end
 end

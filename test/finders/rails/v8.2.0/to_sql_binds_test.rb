@@ -11,6 +11,6 @@ class ToSqlBindsTest < Deprecool::FinderTest
   end
 
   def test_bare_method_with_one_argument
-    assert_no_offense 'to_sql("SELECT 1")'
+    assert_no_offenses 'to_sql("SELECT 1")'
   end
 end

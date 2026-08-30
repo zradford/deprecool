@@ -10,7 +10,7 @@ class ObjectSpaceId2refTest < Deprecool::FinderTest
   end
 
   def test__id2ref_defined_on_other_class
-    assert_no_offense 'MyClass._id2ref(123)'
+    assert_no_offenses 'MyClass._id2ref(123)'
   end
 end
 

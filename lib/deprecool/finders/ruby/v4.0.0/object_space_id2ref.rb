@@ -29,7 +29,7 @@ module Deprecool
             # ObjectSpace or defining '_id2ref' on custom classes
             confidence = node.receiver.name == :ObjectSpace ? :high : :none
 
-            return if confidence == :none
+
 
             add_offense node, confidence: confidence
           end

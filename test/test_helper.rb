@@ -9,7 +9,7 @@ module Deprecool
   # Base class for finder tests. Provides helpers to run a single finder against
   # an inline source string and make assertions about the resulting offenses.
   class FinderTest < Minitest::Test
-    # The finder class for assert_offense and assert_no_offense to use
+    # The finder class for assert_offense and assert_no_offenses to use
     def self.finder(klass) = define_method(:finder) { klass }
 
     def scan(source) = Scanner.new(finder).scan_source(source)
@@ -20,9 +20,9 @@ module Deprecool
       assert_equal confidence, offenses.first.confidence if confidence
     end
 
-    def assert_no_offense(source)
+    def assert_no_offenses(source)
       offenses = scan(source)
-      assert_empty offenses, -> { "expected #{source.inspect} to be empty, but #{offenses.size} offense(s) were found" }
+      assert_empty offenses, -> { "expected no offenses, but #{offenses.size} offense(s) were found in \n\n#{offenses.first.snippet}" }
     end
   end
 end

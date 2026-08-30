@@ -23,7 +23,7 @@ module Deprecool
             return unless arguments.length > 1
 
             confidence = confidence_from_arguments(arguments)
-            return if confidence == :none
+
 
             add_offense(node, confidence: confidence)
           end

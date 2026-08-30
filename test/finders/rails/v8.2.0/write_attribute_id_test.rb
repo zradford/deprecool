@@ -14,6 +14,6 @@ class WriteAttributeIdTest < Deprecool::FinderTest
   end
 
   def test_writing_to_other_attribute_has_no_offense
-    assert_no_offense 'write_attribute(:name, some_value)'
+    assert_no_offenses 'write_attribute(:name, some_value)'
   end
 end

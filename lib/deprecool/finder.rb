@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'helpers/prism_helpers'
-
 module Deprecool
   # Base class for every deprecation finder.
   #
@@ -32,6 +30,14 @@ module Deprecool
     include PrismHelpers
 
     class << self
+      # automatically include GemHelpers into the classes for the Gem
+      def inherited(subclass)
+        gem_name = subclass.name.split("::")[2]
+        return if gem_name == "Ruby"
+
+        subclass.send(:include, const_get("#{gem_name}Helpers"))
+      end
+
       # defines class methods that set instance variables
       %i[gem title summary suggestion reference].each do |attribute|
         define_method(attribute) do |value = (getter = true)|
@@ -120,9 +126,11 @@ module Deprecool
 
     # Record a deprecation at the given node's location.
     #
-    # confidence - [:high, :low], but currently the only check for this is
-    #              from the CLI outputting red or yellow depending on confidence
+    # confidence - [:high, :low, :none], returns early if :none
+    #              to save each finder the effort of checking for :none
     def add_offense(node, confidence: :high)
+      return if confidence == :none
+
       location = node.location # a Prism::Location
 
       @offenses << Offense.new(

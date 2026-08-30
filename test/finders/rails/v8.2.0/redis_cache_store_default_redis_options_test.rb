@@ -10,6 +10,6 @@ class RedisCacheStoreDefaultRedisOptionsTest < Deprecool::FinderTest
   end
 
   def test_bare_method_with_one_argument
-    assert_no_offense 'default_redis_options = { hello: "world"}'
+    assert_no_offenses 'default_redis_options = { hello: "world"}'
   end
 end

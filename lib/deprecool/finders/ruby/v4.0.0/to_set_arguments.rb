@@ -22,7 +22,7 @@ module Deprecool
             return unless node.arguments
 
             confidence = confidence_from_receiver_node(node.receiver)
-            return if confidence == :none
+
 
             add_offense(node, confidence:)
           end

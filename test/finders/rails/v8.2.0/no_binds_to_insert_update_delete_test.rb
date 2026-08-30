@@ -22,18 +22,18 @@ class InsertUpdateDeleteBindsTest < Deprecool::FinderTest
   end
 
   def test_update_record_has_no_offense
-    assert_no_offense 'user.update(name: "deprecool", email: "dep@cool.com")'
+    assert_no_offenses 'user.update(name: "deprecool", email: "dep@cool.com")'
   end
 
   def test_binds_passed_with_arel_insert_has_no_offense
-    assert_no_offense 'connection.insert(Arel.sql("INSERT INTO topics (title) VALUES (?)", "hello"))'
+    assert_no_offenses 'connection.insert(Arel.sql("INSERT INTO topics (title) VALUES (?)", "hello"))'
   end
 
   def test_binds_passed_to_arel_update_has_no_offense
-    assert_no_offense 'connection.update(Arel.sql("UPDATE topics SET title = ? WHERE id = 1", "hi"))'
+    assert_no_offenses 'connection.update(Arel.sql("UPDATE topics SET title = ? WHERE id = 1", "hi"))'
   end
 
   def test_binds_passed_to_arel_delete_has_no_offense
-    assert_no_offense 'connection.delete(Arel.sql("DELETE FROM topics WHERE id = ?", 1))'
+    assert_no_offenses 'connection.delete(Arel.sql("DELETE FROM topics WHERE id = ?", 1))'
   end
 end
