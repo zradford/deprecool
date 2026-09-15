@@ -1,7 +1,11 @@
 # Deprecool
 
 ## Unreleased
+### deprecations
  - Rails 8.2.0 deprecation of ActiveRecord#uniq!
+ - Ruby 4.0's deprecation of the limit argument to JSON.dump
+
+### gem internals
  - Finder Test Helper change from `assert_no_offense` to `assert_no_offenses`
  - auto-inclusion of a gem's helper method class to Finders under a gem's namespace
  

@@ -18,6 +18,12 @@ module PrismHelpers
     node.arguments
   end
 
+  def positional_args_from(arguments)
+    unwrap_arguments(arguments).to_a.reject do |arg|
+      arg.is_a?(Prism::KeywordHashNode) || arg.is_a?(Prism::BlockArgumentNode)
+    end
+  end
+
   # https://docs.ruby-lang.org/en/master/Prism/ArrayNode.html
   def unwrap_array(node)
     return node unless node.is_a?(Prism::ArrayNode)
