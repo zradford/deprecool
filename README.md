@@ -33,7 +33,7 @@ deprecool scan --gem=rails,ruby
 
 - `--format=json` if you want the output as json instead of the default text
 - `--lockfile` takes a path to your `Gemfile.lock`, it defaults to using the current directory
-- `--all` run every finder regardless of applicability
+- `--all` run every finder regardless of applicability, bypassing the `--gems` and lockfile parsing
 - `--paths` an array of the files or directories to look for ruby file in, defaults to `'.'`
 
 ## Contributing
