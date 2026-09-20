@@ -1,6 +1,6 @@
 # Deprecool
 
-## Unreleased
+## [0.1.4] - 2026-09-20
 ### deprecations
  - Rails 8.2.0 deprecation of ActiveRecord#uniq!
  - Ruby 4.0's deprecation of the limit argument to JSON.dump
