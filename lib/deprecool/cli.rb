@@ -34,38 +34,57 @@ module Deprecool
         desc 'Scan files or directories for known deprecations'
 
         argument :paths, type: :array, desc: 'Files or directories to scan'
-        option :lockfile, default: 'Gemfile.lock', desc: 'Path to Gemfile.lock, defaults to current directory'
-        option :gems, type: :array, desc: 'Gems to scan for: --gems=ruby,rails'
-        option :format, default: 'text', values: %w[text json], desc: 'Output format'
-        option :all, type: :boolean, default: false, desc: 'Run every finder regardless of version'
 
-        def call(paths:, format:, gems: [], all:, lockfile:, **)
+        option :format,
+               default: 'text',
+               values: %w[text json],
+               desc: 'Output format'
+
+        option :gems,
+               type: :array,
+               desc: 'Gems to scan for: --gems=ruby,rails'
+
+        option :lockfile,
+               default: 'Gemfile.lock',
+               desc: 'Path to Gemfile.lock, defaults to current directory'
+
+        option :all,
+               type: :boolean,
+               default: false,
+               desc: 'Run every finder regardless of version'
+
+        def call(paths:, format:, gems: [], lockfile:, all:, **)
           json_output = format == 'json'
-          files   = CLI.ruby_files(paths)
+          files = CLI.ruby_files(paths)
 
-          if files.empty?
-            if paths.empty?
-              warn CLI.colorize('deprecool: please supply a path/to/file/or/directory', :red)
-              exit 2
-            end
-
-            warn CLI.colorize("deprecool: no Ruby files found in #{paths.join(', ')}", :red)
-            exit 2
+          if paths.empty?
+            puts 'No path given, using \'.\' as the path' unless json_output
           end
 
-          if gems.any?
-            puts "Scanning for deprecations from: #{gems.join(', ')}" unless json_output
-            # we won't be scanning a lockfile
-            gem_versions = []
-          elsif all
-            gem_versions = []
-            gems = []
-          else
-            puts "Scanning #{lockfile}..." unless json_output
-            gem_versions = LockfileParser.parse!(lockfile)
+          # TODO: detect when deprecool is run on too many projects at once
+          # i.e. if you run it on a ~/Documents folder and it finds
+          # a ton of files from different projects it doesn't know what finders
+          # to use and finds nothing
+          if files.empty?
+            warn "No ruby files found in #{paths.join(', ')}"
+            exit 1
+          end
 
-            # we don't need to look for individual gems when scanning gemfiles
-            gems = []
+          dependency_files = CLI.find_dependency_files
+          gem_versions = []
+          gems ||= []
+
+          # if the user supplied "all" then we don't worry about finding gem versions
+          if !all
+            # next we need to find where the dependencies come from, or we could match
+            # offenses from not applicable versions of gems
+            if dependency_files.any?
+              puts "Scanning #{dependency_files.join(', ')} ..."
+              gem_versions = DependencyParser.parse_all(dependency_files)
+              if gems.any?
+                puts "Scanning for deprecations from: #{gems.join(', ')}" unless json_output
+              end
+            end
           end
 
           finders  = Registry.applicable(gems:, gem_versions:, include_all: all)
@@ -92,17 +111,28 @@ module Deprecool
 
       def ruby_files(paths)
         paths = paths.empty? ? ['.'] : paths
+        begin
+          files = paths.flat_map do |path|
+            if File.directory?(path)
+              Dir[File.join(path, '**', '*.rb')]
+            elsif File.file?(path)
+              [path]
+            else
+              warn "deprecool: no such file or directory: #{path}"
+              []
+            end
+          end.uniq.sort
+        rescue SystemCallError => err
+          warn "deprecool: An error occurred - #{err}"
+        ensure
+          files ||= []
 
-        paths.flat_map do |path|
-          if File.directory?(path)
-            Dir[File.join(path, '**', '*.rb')]
-          elsif File.file?(path)
-            [path]
-          else
-            warn "deprecool: no such file or directory: #{path}"
-            []
-          end
-        end.uniq.sort
+          return files
+        end
+      end
+
+      def find_dependency_files
+        Dir["*.gemspec", "Gemfile.lock"]
       end
 
       def report(offenses, format, finders)
@@ -116,7 +146,7 @@ module Deprecool
       def text_report(offenses, finders)
         if offenses.empty?
           puts colorize('No deprecations found.', :green)
-          puts "(#{finders.size} finder(s) active)"
+          puts "(#{finders&.size || 0} finder(s) active)"
           return
         end
 
@@ -125,7 +155,7 @@ module Deprecool
         offenses.each_value do |offense_array|
           offense = offense_array.first
 
-          puts "\n#{colorize(offense.title, :bold)}"
+          puts "\n#{offense.gem} #{offense.deprecated_in} - #{colorize(offense.title, :bold)}"
           puts
           puts " * #{offense.summary}"
           puts
@@ -150,8 +180,8 @@ module Deprecool
 
       def list_finders(finders)
         puts 'Active finders:'
-        finders.sort_by { [it.gem.to_s, it.deprecated_in.to_s, it.id.to_s] }.each do
-          puts " - #{it.classname.ljust(35)} (#{it.gem} #{it.deprecated_in.to_s}) — #{it.title}"
+        finders.sort_by { |f| [f.gem.to_s, f.deprecated_in.to_s, f.id.to_s] }.each do
+          puts " - #{f.classname.ljust(35)} (#{f.gem} #{f.deprecated_in.to_s}) — #{f.title}"
         end
         puts '  (none)' if finders.empty?
       end

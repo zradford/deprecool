@@ -9,7 +9,7 @@ module Deprecool
           deprecated_in '8.2.0'
           removed_in    '9.0.0'
           title         'Binds being bassed to Insert Update Delete is deprecated'
-          summary       ' Now that `Arel.sql(sql_with_placeholders, *binds)` wraps SQL and its binds' \
+          summary       ' Now that `Arel.sql(sql_with_placeholders, *binds)` wraps SQL and its binds ' \
                         'together as an `Arel::Nodes::BoundSqlLiteral`, just like ' \
                         '`Model.where("... = ?", value)`, the separate positional is no longer needed'
           suggestion    'Old: `connection.insert("INSERT INTO topics (title) VALUES (?)", nil, nil, ["hello"])` ' \
@@ -19,11 +19,11 @@ module Deprecool
 
           def on_call_node(node)
             return unless %i[insert update delete].include?(node.name)
+            return if node.receiver.nil? # bare `delete :foo, on: :member` in a routes file, etc.
             return unless arguments = unwrap_arguments(node.arguments)
             return unless arguments.length > 1
 
             confidence = confidence_from_arguments(arguments)
-
 
             add_offense(node, confidence: confidence)
           end
@@ -38,11 +38,12 @@ module Deprecool
             # it it's a Prism::CallNode, and not a variable call, then I don't know what it is here,
             # maybe it's like 'connection.update(generate_sql(some_arg), ["name"])' and if you are doing that
             # then good luck?
-            if first.is_a?(Prism::CallNode)
-              return :low if first.variable_call? # can't tell what's stored in the variable, https://docs.ruby-lang.org/en/master/Prism/CallNode.html#method-i-variable_call-3F
-              :none
-            elsif %w[INSERT UPDATE DELETE].include?(first.unescaped[..5].upcase)
-              :high
+            case first
+            when Prism::CallNode
+              # can't tell what's stored in the variable, https://docs.ruby-lang.org/en/master/Prism/CallNode.html#method-i-variable_call-3F
+              first.variable_call? ? :low : :none
+            when Prism::StringNode
+              first.unescaped.match?(/\A\s*(INSERT|UPDATE|DELETE)\s/i) ? :high : :none
             else
               :none
             end

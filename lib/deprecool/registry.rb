@@ -22,7 +22,7 @@ module Deprecool
     def finders_by_gem(gems)
       targets = []
       gems.each do |gem|
-        targets << all_finders.select { it.to_s.match(/#{gem.capitalize}/) }
+        targets << all_finders.select { |finder| finder.to_s.match(/#{gem.capitalize}/) }
       end
       targets.flatten
     end

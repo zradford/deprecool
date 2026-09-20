@@ -36,4 +36,8 @@ class InsertUpdateDeleteBindsTest < Deprecool::FinderTest
   def test_binds_passed_to_arel_delete_has_no_offense
     assert_no_offenses 'connection.delete(Arel.sql("DELETE FROM topics WHERE id = ?", 1))'
   end
+
+  def test_no_offense_found_in_routes_file
+    assert_no_offenses 'delete :delete_circleci_token, on: :member'
+  end
 end
